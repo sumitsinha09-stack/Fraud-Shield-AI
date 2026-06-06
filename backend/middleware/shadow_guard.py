@@ -6,6 +6,7 @@ Blocks requests that try to manipulate the AI pipeline.
 """
 
 import re
+from typing import Optional
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.requests import Request
 from starlette.responses import JSONResponse
@@ -35,13 +36,30 @@ INJECTION_PATTERNS = [
 COMPILED = [re.compile(p, re.IGNORECASE) for p in INJECTION_PATTERNS]
 
 
-def detect_injection(text: str) -> str | None:
+def detect_injection(text: str) -> Optional[str]:
     """Returns the matched pattern string or None."""
     for pattern in COMPILED:
         m = pattern.search(text)
         if m:
             return m.group()
     return None
+
+
+def scrub_pii(text: str) -> str:
+    """Remove PII (Personally Identifiable Information) from text."""
+    # Remove email addresses
+    text = re.sub(r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b', '[EMAIL]', text)
+    # Remove phone numbers
+    text = re.sub(r'\b\d{3}[-.]?\d{3}[-.]?\d{4}\b', '[PHONE]', text)
+    # Remove SSN
+    text = re.sub(r'\b\d{3}-\d{2}-\d{4}\b', '[SSN]', text)
+    # Remove credit card numbers
+    text = re.sub(r'\b\d{4}[\s-]?\d{4}[\s-]?\d{4}[\s-]?\d{4}\b', '[CC]', text)
+    # Remove Aadhaar numbers
+    text = re.sub(r'\b\d{4}\s\d{4}\s\d{4}\b', '[AADHAAR]', text)
+    # Remove PAN numbers
+    text = re.sub(r'\b[A-Z]{5}\d{4}[A-Z]\b', '[PAN]', text)
+    return text
 
 
 class ShadowGuardMiddleware(BaseHTTPMiddleware):
@@ -92,7 +110,7 @@ class ShadowGuardMiddleware(BaseHTTPMiddleware):
         return await call_next(request)
 
 
-def _scan_json(obj, path="root") -> str | None:
+def _scan_json(obj, path="root") -> Optional[str]:
     if isinstance(obj, str):
         if detect_injection(obj):
             return path

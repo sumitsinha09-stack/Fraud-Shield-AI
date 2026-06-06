@@ -11,7 +11,7 @@ import audioop
 import io
 import json
 import wave
-from typing import Dict
+from typing import Dict, Optional
 
 from core.live_call import process_chunk, end_call, get_or_create_call
 
@@ -55,7 +55,7 @@ class TwilioStreamHandler:
         self._mulaw_buffer: bytes = b""
         self._chunk_count = 0
 
-    async def handle_message(self, raw: str) -> dict | None:
+    async def handle_message(self, raw: str) -> Optional[Dict]:
         try:
             msg = json.loads(raw)
         except Exception:
