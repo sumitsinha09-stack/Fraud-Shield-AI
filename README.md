@@ -51,3 +51,47 @@
    ```bash
    git clone https://github.com/sumitsinha09-stack/Fraud-Shield-AI.git
    cd Fraud-Shield-AI
+
+   Fraud-Shield-AI/
+├── backend/
+│   ├── main.py                          # FastAPI application entry point
+│   ├── requirements.txt                 # Python dependencies
+│   ├── core/
+│   │   ├── classifier.py               # Central classification engine
+│   │   ├── threat_score.py             # Unified scoring system
+│   │   ├── vector_db.py                # ChromaDB integration
+│   │   ├── feedback.py                 # Feedback storage & analytics
+│   │   ├── live_call.py                # Real-time call processing
+│   │   └── twilio_stream.py            # Twilio media stream handler
+│   ├── detectors/
+│   │   ├── text_detector.py            # SMS/Email scam analysis
+│   │   ├── url_detector.py             # URL sandbox & heuristic analysis
+│   │   ├── voice_detector.py           # Voice deepfake detection
+│   │   ├── video_detector.py           # Video deepfake detection
+│   │   ├── file_detector.py            # Malware scanning
+│   │   ├── email_detector.py           # Email header & body analysis
+│   │   ├── credential_detector.py      # Credential extraction
+│   │   └── *.py                        # Additional detectors
+│   └── middleware/
+│       ├── shadow_guard.py             # Prompt injection protection
+│       └── dlp_guard.py                # Data loss prevention
+│
+├── frontend/
+│   ├── package.json
+│   ├── next.config.ts
+│   ├── src/
+│   │   ├── app/
+│   │   │   ├── page.tsx               # Main page
+│   │   │   ├── layout.tsx             # Root layout
+│   │   │   └── globals.css            # Global styles
+│   │   ├── components/
+│   │   │   ├── AnalyzeTab.tsx         # Main analysis interface
+│   │   │   ├── ResultPanel.tsx        # Result display
+│   │   │   ├── ScoreRing.tsx          # Threat score visualization
+│   │   │   ├── Navbar.tsx             # Navigation bar
+│   │   │   └── *.tsx                  # Other components
+│   │   └── context/
+│   │       └── ApiContext.jsx         # API state management
+│   └── public/                        # Static assets
+│
+└── README.md                          # This file
